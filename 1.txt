@@ -22,3 +22,132 @@ pipeline {
         }
     }
 }
+
+/*
+
+pipeline {
+    agent any
+
+    tools {
+        maven 'Maven'
+        jdk 'JDK17'
+    }
+
+    stages {
+
+        stage('Checkout Code') {
+            steps {
+                git branch: 'main', url: 'https://github.com/SriharshaG05/java-webapp.git'
+            }
+        }
+
+        stage('Build WAR') {
+            steps {
+                bat 'mvn -Dmaven.test.failure.ignore=true clean package'
+            }
+        }
+
+        stage('List Output (Debug)') {
+            steps {
+                bat 'dir target'
+            }
+        }
+
+        stage('Archive WAR') {
+            steps {
+                archiveArtifacts artifacts: 'target/*.war', fingerprint: true
+            }
+        }
+
+        stage('Deploy to Tomcat') {
+            steps {
+                deploy adapters: [tomcat8(
+                    credentialsId: 'tomcatCreds',
+                    path: '/',
+                    url: 'http://localhost:8080'
+                )], 
+                contextPath: 'java-webapp',
+                war: 'target/java-webapp-1.0-SNAPSHOT.war'
+            }
+        }
+    }
+
+    post {
+        always {
+            script {
+                if (fileExists('target/surefire-reports')) {
+                    junit 'target/surefire-reports/*.xml'
+                } else {
+                    echo 'No test results found — skipping JUnit.'
+                }
+            }
+        }
+        
+        success {
+            echo "🎉 Build + Deploy SUCCESS!"
+        }
+        
+        failure {
+            echo "❌ Something failed!"
+        }
+    }
+}
+*/
+
+/*
+pipeline {
+    agent any
+
+    tools {
+        maven 'maven'   // Name in Jenkins Global Tool Configuration
+        jdk 'jdk'     // Name in Jenkins Global Tool Configuration
+    }
+
+    stages {
+
+        stage('Checkout Code') {
+            steps {
+                git branch: 'main', url: 'https://github.com/SriharshaG05/java-webapp.git'
+            }
+        }
+
+        stage('Build WAR') {
+            steps {
+                bat 'mvn -Dmaven.test.failure.ignore=true clean package'
+            }
+        }
+
+        stage('List Output (Debug)') {
+            steps {
+                bat 'dir target'
+            }
+        }
+
+        stage('Archive WAR') {
+            steps {
+                archiveArtifacts artifacts: 'target/*.war', fingerprint: true
+            }
+        }
+    }
+
+    post {
+        always {
+            script {
+                if (fileExists('target/surefire-reports')) {
+                    junit 'target/surefire-reports/*.xml'
+                } else {
+                    echo 'No test results found — skipping JUnit step.'
+                }
+            }
+        }
+        
+        success {
+            echo "🎉 Build successful! WAR file created and archived."
+        }
+        
+        failure {
+            echo "❌ Build failed — check logs."
+        }
+    }
+}
+*/
